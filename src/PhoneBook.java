@@ -1,7 +1,7 @@
 public class PhoneBook {
 
     public static void main(String[] args) {
-        //Добавить считывание ввода пользователя в цикле
+        //Добавить считывание ввода пользователя в цикле123
     }
 
     public static boolean checkPhoneNumber(String phoneNumber) {
