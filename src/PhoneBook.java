@@ -11,7 +11,7 @@
 import java.util.Scanner;
 import java.util.regex.*;
 
-public class PhoneBook {
+public class   ть   PhoneBook {
 
     public static void main(String[] args) {
         Scanner stdin = new Scanner(System.in);
