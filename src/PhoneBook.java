@@ -15,7 +15,7 @@ public class PhoneBook {
 
     public static void main(String[] args) {
         Scanner stdin = new Scanner(System.in);
-        String item, fullName, numPhone;
+        String item, fullName, numPhone, service;
         String[][] dataBase = {{"", ""}, {"", ""}, {"", ""}, {"", ""}, {"", ""}};
         boolean isExit = true;
         int indexRow;
@@ -27,6 +27,7 @@ public class PhoneBook {
             System.out.println("3.\tПоказать данные телефонной книги");
             System.out.println("4.\tПоказать данные одной записи");
             System.out.println("5.\tВыйти из программы");
+            System.out.print("Введите цифру от 1 до 5, соответствующую пункту меню>>>");
             item = stdin.nextLine();
             if (item.length() != 1) {
                 System.out.println("Incorrect value entered");
@@ -40,13 +41,14 @@ public class PhoneBook {
                         fullName = formatFullName(fullName);
                         indexRow = checkMatch(fullName, dataBase, 0);
                         if (indexRow != -1) {
-                            System.out.printf("Номер телефона по имени %s: %s",
+                            System.out.printf("Номер телефона по имени %s: %s\n",
                                     dataBase[indexRow][0], dataBase[indexRow][1]);
                         } else {
                             System.out.print("Введите номер телефона>>>");
                             numPhone = stdin.nextLine();
                             if (checkPhoneNumber(numPhone)) {
                                 numPhone = formatPhoneNumber(numPhone);
+                                dataBase = addRegister(fullName, numPhone, dataBase);
                             } else {
                                 System.out.println("Введен некорректный номер телефона");
                             }
@@ -55,37 +57,36 @@ public class PhoneBook {
                         System.out.println("Введено некорректное имя");
                     }
                     System.out.print("Press enter>>>");
-                    stdin.nextLine();
+                    service = stdin.nextLine();
                     break;
                 case'2':
                     System.out.println("Delete the person's data");
                     System.out.print("Press enter>>>");
-                    stdin.nextLine();
+                    service = stdin.nextLine();
                     break;
                 case'3':
-                    System.out.println("Show phonebook");
+                    printPhoneBook(dataBase);
                     System.out.print("Press enter>>>");
-                    stdin.nextLine();
+                    service = stdin.nextLine();
                     break;
                 case'4':
                     System.out.println("Show phonebook");
                     System.out.print("Press enter>>>");
-                    stdin.nextLine();
+                    service = stdin.nextLine();
                     break;
-                    case'5':
+                case'5':
                     System.out.println("Exit the program");
                     System.out.print("Press the key Y(exit) " +
                             "or any another key(stay)>>>");
-                    if (stdin.hasNext("[Yy]")) {
+                    if (stdin.hasNext("[YyНн]")) {
                         isExit = false;
                     }
-                    stdin.nextLine();
+                        service = stdin.nextLine();
                     break;
                 default:
                     System.out.println("Incorrect value entered");
             }
         }
-        //Добавить считывание ввода пользователя в цикле123
     }
 
     public static boolean checkName(String name) {
@@ -95,14 +96,14 @@ public class PhoneBook {
 
     public static boolean checkPhoneNumber(String phoneNumber) {
         phoneNumber = phoneNumber.replaceAll("[^0-9]*", "");
-        System.out.println(phoneNumber);
-        return phoneNumber.length() == 11;
+        return (phoneNumber.length() == 11) && (phoneNumber.matches("^[7-8].*"));
     }
 
-    public static int checkMatch(String str, String[][] Array, int column) {
+    public static int checkMatch(String str, String[][] array, int column) {
         int index = -1;
-        for (int i = 0; i < Array.length; i++) {
-            if (str.equals(Array[i][column])) {
+
+        for (int i = 0; i < array.length; i++) {
+            if (str.equals(array[i][column])) {
                 index = i;
             }
         }
@@ -113,6 +114,7 @@ public class PhoneBook {
         Pattern pattern = Pattern.compile("[A-ZА-Я]");
         Matcher match = pattern.matcher(name);
         String temp = name.substring(0, 1);
+
         if (!match.matches()) {
             temp = temp.toUpperCase();
         }
@@ -123,8 +125,10 @@ public class PhoneBook {
     public static String formatFullName(String name) {
         Pattern pattern = Pattern.compile(".+[-].+");
         String[] partsOfWord;
+        String[] words;
+
         name = name.replaceAll("\\s+", " ");
-        String[] words = name.split("\\s");
+        words = name.split("\\s");
         Matcher match = pattern.matcher("");
         for (int i = 0; i < words.length; i++) {
             match.reset(words[i]);
@@ -143,17 +147,51 @@ public class PhoneBook {
 
     public static String formatPhoneNumber(String str) {
         String number = "+7 ";
+
         str = str.replaceAll("[^0-9]*", "");
         number += str.substring(1, 4) + " " + str.substring(4, 7) +
                 " " + str.substring(7, 9) + " " + str.substring(9);
         return number;
     }
 
-    public static void add(String[][] book, String name, String number) {
-        //add logic
+    public static String[][] addRegister(String fullName,
+                                         String phoneNumber, String[][] array) {
+        int index = -1;
+        String[][] newArray;
+
+        for (int i = 0; i < array.length; i++) {
+            if (array[i][0].length() == 0) {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1) {
+            array[index][0] = fullName;
+            array[index][1] = phoneNumber;
+            return array;
+        } else {
+            index = array.length;
+            newArray = new String[index + 5][2];
+            for (int i = 0; i < index; i++) {
+                newArray[i][0] = array[i][0];
+                newArray[i][1] = array[i][1];
+            }
+            newArray[index][0] = fullName;
+            newArray[index][1] = phoneNumber;
+            for (int i = index + 1; i < newArray.length; i++) {
+                newArray[i][0] = "";
+                newArray[i][1] = "";
+            }
+            return newArray;
+        }
     }
 
-    public static void list(String[][] book) {
-        //print phone book
+    public static void printPhoneBook(String[][] book) {
+        System.out.printf("\t%20s\t%26s\n", "-=Имя=-", "-=Телефон=-");
+        for (int i = 0; i < book.length; i++) {
+            if (book[i][0].length() > 0) {
+                System.out.printf("%d. \t%-35s\t%-20s\n", i + 1, book[i][0], book[i][1]);
+            }
+        }
     }
 }
