@@ -3,10 +3,25 @@
 names of people and their phone numbers. Its apllication also lets to show<br/> 
 database or separate entries on display and to input data in database.
 ## Features of use
-For the input of fullname use three words (last name, first name, middle name)<br>
-wich may consist of Latin or Cyrillic letters. Using a hyphen permissible too,<br/>
-but only in a middle of words. A number of phone must include 11 digits.<br/>
-Herewith the format may be any.
+For the input of fullname use three words (last name, first name, middle name)<br/>
+separated whitespaces. These words may consist of Latin or Cyrillic letters.<br/>
+Using a hyphen permissible too, but only in a middle of words. A number of phone<br/>
+must include 11 digits and first digit must to be 7 or 8. Other symbols is<br/>
+allowable for number of phone.<br/> 
+When adding an entry, user can enter either a phone number or a full name if he<br/>
+wish. The program itself recognizes the format and at the second stage of creating<br/>
+a register, will offer to enter the necessary data.<br/>
+If at any stage of creating a register a match is found between the entered data and<br/>
+the lines of the telephone directory, the program will display such a register and will<br/>
+not add a new one.
+## Features of implementation
+If the moment of writing a new register has come and all the rows of the array<br/>
+"String[][] dataBase" are occupied, the program will first increase the size of the<br/>
+array by (number of rows) by 5 and then rec a new register. If, when deleting a<br/>
+register, more 5 free rows then, the program will reduce the size of the array<br/>
+(the number of rows) in such a way that only 2 free rows remain.<br/>
+This will save memory while the program is running.<br/>
+To avoid errors when accessing free array strings, they are initialized with empty values ("").
 ## Methods of class PhoneBook:
 #### public static boolean checkName(String):
 Takes String, return true or false  depending on match of String with regex.<br/>
@@ -45,5 +60,6 @@ This method sorts the phonebook entries alphabetically, comparing only the rows<
 in column zero of the array "String[][] array". The rows of the column with index one<br/>
 are moved according to the movements of the rows of the column with the index<br/>
 zero.
-## Autor    
-Eremin Ivan Nikolaevich
+### [Link to the program's scheme](https://github.com/DrEremin/PhoneBook/blob/master/ProgrammScheme.pdf)
+## Autors:    
+**Eremin Ivan Nikolaevich**

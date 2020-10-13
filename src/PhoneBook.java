@@ -1,9 +1,7 @@
 /*
  * Classname: PhoneBook
  *
- * Version:
- *
- * Date: 09.10.2020
+ * Date: 13.10.2020
  *
  * Autor: Ivan Eremin
  */
@@ -20,6 +18,10 @@ public class PhoneBook {
         boolean isExit = true;
         int indexRow;
 
+        /*
+         * Main loop of the program
+         */
+
         while (isExit) {
             System.out.println("\t\t\tМеню\t\t\t");
             System.out.println("1.\tДобавить запись");
@@ -33,6 +35,11 @@ public class PhoneBook {
                 continue;
             }
             switch (item.charAt(0)) {
+
+                /*
+                 * The block of addition of registers
+                 */
+
                 case'1':
                     System.out.print("Введите ФИО или номер телефона>>>");
                     fullName = stdin.nextLine();
@@ -100,6 +107,11 @@ public class PhoneBook {
                         service = stdin.nextLine();
                     }
                     break;
+
+                /*
+                 * The block of deletion of registers
+                 */
+
                 case'2':
                     System.out.print("Введите ФИО или номер телефона>>>");
                     fullName = stdin.nextLine();
@@ -131,11 +143,21 @@ public class PhoneBook {
                         service = stdin.nextLine();
                     }
                     break;
+
+                /*
+                 * The block of output of phone book on display
+                 */
+
                 case'3':
                     printPhoneBook(dataBase);
                     System.out.print("Press enter>>>");
                     service = stdin.nextLine();
                     break;
+
+                /*
+                 * The block of an exit from a programm
+                 */
+
                 case'4':
                     isExit = false;
                     break;
