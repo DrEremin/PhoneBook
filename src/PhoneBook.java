@@ -17,6 +17,9 @@ public class PhoneBook {
         Scanner stdin = new Scanner(System.in);
         String item, fullName, numPhone, service;
         String[][] dataBase = {{"", ""}, {"", ""}, {"", ""}, {"", ""}, {"", ""}};
+        /*String[][] dataBase = {{"Q Q Q", "+7 777 777 77 77"}, {"W W W", "+7 777 777 77 76"},
+                {"E E E", "+7 777 777 77 75"}, {"R R R", "+7 777 777 77 74"}, {"T T T", "+7 777 777 77 73"},
+                {"", ""}, {"", ""}, {"", ""}, {"", ""}, {"", ""}};*/
         boolean isExit = true;
         int indexRow;
 
@@ -25,23 +28,23 @@ public class PhoneBook {
             System.out.println("1.\tДобавить запись");
             System.out.println("2.\tУдалить запись");
             System.out.println("3.\tПоказать данные телефонной книги");
-            System.out.println("4.\tПоказать данные одной записи");
-            System.out.println("5.\tВыйти из программы");
-            System.out.print("Введите цифру от 1 до 5, соответствующую пункту меню>>>");
+            System.out.println("4.\tВыйти из программы");
+            System.out.print("Введите цифру от 1 до 4, соответствующую пункту меню>>>");
             item = stdin.nextLine();
             if (item.length() != 1) {
-                System.out.println("Incorrect value entered");
+                System.out.println("Введено более одного символа");
                 continue;
             }
             switch (item.charAt(0)) {
                 case'1':
-                    System.out.print("Введите ФИО>>>");
+                    System.out.print("Введите ФИО или номер телефона>>>");
                     fullName = stdin.nextLine();
+                    numPhone = fullName;
                     if (checkName(fullName)) {
                         fullName = formatFullName(fullName);
                         indexRow = checkMatch(fullName, dataBase, 0);
                         if (indexRow != -1) {
-                            System.out.printf("Номер телефона по имени %s: %s\n",
+                            System.out.printf("Gо имени %s номер телефона : %s\n",
                                     dataBase[indexRow][0], dataBase[indexRow][1]);
                         } else {
                             System.out.print("Введите номер телефона>>>");
@@ -53,14 +56,53 @@ public class PhoneBook {
                                 System.out.println("Введен некорректный номер телефона");
                             }
                         }
-                    } else {
-                        System.out.println("Введено некорректное имя");
+                    } else if (checkPhoneNumber(numPhone)) {
+                        numPhone = formatPhoneNumber(numPhone);
+                        indexRow = checkMatch(numPhone, dataBase, 1);
+                        if (indexRow != -1) {
+                            System.out.printf("По номеру телефона %s имя: %s\n",
+                                    dataBase[indexRow][1], dataBase[indexRow][0]);
+                        } else {
+                            System.out.print("Введите ФИО>>>");
+                            fullName = stdin.nextLine();
+                            if (checkName(fullName)) {
+                                fullName = formatFullName(fullName);
+                                dataBase = addRegister(fullName, numPhone, dataBase);
+                            } else {
+                                System.out.println("Введены некорректные ФИО");
+                            }
+                        }
+                    }
+                    else {
+                        System.out.println("Введены некорректные данные");
                     }
                     System.out.print("Press enter>>>");
                     service = stdin.nextLine();
                     break;
                 case'2':
-                    System.out.println("Delete the person's data");
+                    System.out.print("Введите ФИО или номер телефона>>>");
+                    fullName = stdin.nextLine();
+                    numPhone = fullName;
+                    if (checkName(fullName)) {
+                        fullName = formatFullName(fullName);
+                        indexRow = checkMatch(fullName, dataBase, 0);
+                        if (indexRow != -1) {
+                            dataBase = delRegister(dataBase, indexRow);
+                        } else {
+                            System.out.println("Такой записи, в телефонной книге, нет");
+                        }
+                    } else if (checkPhoneNumber(numPhone)) {
+                        numPhone = formatPhoneNumber(numPhone);
+                        indexRow = checkMatch(numPhone, dataBase, 1);
+                        if (indexRow != -1) {
+                            dataBase = delRegister(dataBase, indexRow);
+                        } else {
+                            System.out.println("Такой записи, в телефонной книге, нет");
+                        }
+                    }
+                    else {
+                        System.out.println("Введены некорректные данные");
+                    }
                     System.out.print("Press enter>>>");
                     service = stdin.nextLine();
                     break;
@@ -70,21 +112,10 @@ public class PhoneBook {
                     service = stdin.nextLine();
                     break;
                 case'4':
-                    System.out.println("Show phonebook");
-                    System.out.print("Press enter>>>");
-                    service = stdin.nextLine();
-                    break;
-                case'5':
-                    System.out.println("Exit the program");
-                    System.out.print("Press the key Y(exit) " +
-                            "or any another key(stay)>>>");
-                    if (stdin.hasNext("[YyНн]")) {
-                        isExit = false;
-                    }
-                        service = stdin.nextLine();
+                    isExit = false;
                     break;
                 default:
-                    System.out.println("Incorrect value entered");
+                    System.out.println("Выбор вне диапазона меню");
             }
         }
     }
@@ -186,8 +217,49 @@ public class PhoneBook {
         }
     }
 
+    public static String[][] delRegister(String[][] array, int index) {
+        String[][] newArray;
+        int end = array.length;
+        int freeRows = 0;
+
+        if ((index == end - 1) || (array[index + 1][0].length() == 0)) {
+            array[index][0] = "";
+            array[index][1] = "";
+        } else {
+            for (int i = index + 1; i < end; i++) {
+                if (array[i - 1][0].length() == 0) {
+                    break;
+                }
+                array[i - 1][0] = array[i][0];
+                array[i - 1][1] = array[i][1];
+            }
+            if (array[end - 1][0].length() > 0) {
+                array[end - 1][0] = "";
+                array[end - 1][1] = "";
+            }
+        }
+        for (int i = end - 1; i >= 0; i--) {
+            if (array[i][0].length() == 0) {
+                freeRows++;
+            } else {
+                break;
+            }
+        }
+        if (freeRows > 5) {
+            end -= (freeRows - 2);
+            newArray = new String[end][2];
+            for (int i = 0; i < end; i++) {
+                newArray[i][0] = array[i][0];
+                newArray[i][1] = array[i][1];
+            }
+            return newArray;
+        } else {
+            return array;
+        }
+    }
+
     public static void printPhoneBook(String[][] book) {
-        System.out.printf("\t%20s\t%26s\n", "-=Имя=-", "-=Телефон=-");
+        System.out.printf("\t%22s\t%28s\n", "*--=Имя=--*", "*--=Телефон=--*");
         for (int i = 0; i < book.length; i++) {
             if (book[i][0].length() > 0) {
                 System.out.printf("%d. \t%-35s\t%-20s\n", i + 1, book[i][0], book[i][1]);

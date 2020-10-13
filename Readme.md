@@ -33,8 +33,12 @@ This method formats the argument and returns a string in the format<br/>
 #### public static String[][] addRegister(String, String, String[][]):
 This method increases a two-dimensional array of strings by 5 rows if there is<br/>
 no free row and writes the strings (name and phone number) to a free row, or if<br/>
-there is a free row, then simply writes strings to it.
+there is a free row, then simply writes data to it.
 #### public static void printPhoneBook(String[][] book):
 This method output on display the data of all phonebook.
+#### public static String[][] delRegister(String[][] array, int index):
+This method deletes a register by phone number or by name. If the number of free<br/>
+rows after deleting a register becomes more than five, then it decreases the size<br/> 
+of the array in such a way that for registers there are two free rows.
 ## Autor    
 Eremin Ivan Nikolaevich
