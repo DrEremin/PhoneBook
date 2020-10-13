@@ -40,5 +40,10 @@ This method output on display the data of all phonebook.
 This method deletes a register by phone number or by name. If the number of free<br/>
 rows after deleting a register becomes more than five, then it decreases the size<br/> 
 of the array in such a way that for registers there are two free rows.
+#### public static void sortingOfRegisters(String[][] array):
+This method sorts the phonebook entries alphabetically, comparing only the rows<br/>
+in column zero of the array "String[][] array". The rows of the column with index one<br/>
+are moved according to the movements of the rows of the column with the index<br/>
+zero.
 ## Autor    
 Eremin Ivan Nikolaevich

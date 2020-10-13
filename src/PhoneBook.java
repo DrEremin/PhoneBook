@@ -17,9 +17,6 @@ public class PhoneBook {
         Scanner stdin = new Scanner(System.in);
         String item, fullName, numPhone, service;
         String[][] dataBase = {{"", ""}, {"", ""}, {"", ""}, {"", ""}, {"", ""}};
-        /*String[][] dataBase = {{"Q Q Q", "+7 777 777 77 77"}, {"W W W", "+7 777 777 77 76"},
-                {"E E E", "+7 777 777 77 75"}, {"R R R", "+7 777 777 77 74"}, {"T T T", "+7 777 777 77 73"},
-                {"", ""}, {"", ""}, {"", ""}, {"", ""}, {"", ""}};*/
         boolean isExit = true;
         int indexRow;
 
@@ -44,16 +41,29 @@ public class PhoneBook {
                         fullName = formatFullName(fullName);
                         indexRow = checkMatch(fullName, dataBase, 0);
                         if (indexRow != -1) {
-                            System.out.printf("Gо имени %s номер телефона : %s\n",
+                            System.out.printf("По имени %s номер телефона : %s\n",
                                     dataBase[indexRow][0], dataBase[indexRow][1]);
+                            System.out.print("Press enter>>>");
+                            service = stdin.nextLine();
                         } else {
                             System.out.print("Введите номер телефона>>>");
                             numPhone = stdin.nextLine();
                             if (checkPhoneNumber(numPhone)) {
                                 numPhone = formatPhoneNumber(numPhone);
-                                dataBase = addRegister(fullName, numPhone, dataBase);
+                                indexRow = checkMatch(numPhone, dataBase, 1);
+                                if (indexRow != -1) {
+                                    System.out.printf("По номеру телефона %s имя: %s\n",
+                                            dataBase[indexRow][1], dataBase[indexRow][0]);
+                                    System.out.print("Press enter>>>");
+                                    service = stdin.nextLine();
+                                } else {
+                                    dataBase = addRegister(fullName, numPhone, dataBase);
+                                    sortingOfRegisters(dataBase);
+                                }
                             } else {
                                 System.out.println("Введен некорректный номер телефона");
+                                System.out.print("Press enter>>>");
+                                service = stdin.nextLine();
                             }
                         }
                     } else if (checkPhoneNumber(numPhone)) {
@@ -67,17 +77,28 @@ public class PhoneBook {
                             fullName = stdin.nextLine();
                             if (checkName(fullName)) {
                                 fullName = formatFullName(fullName);
-                                dataBase = addRegister(fullName, numPhone, dataBase);
+                                indexRow = checkMatch(fullName, dataBase, 0);
+                                if (indexRow != -1) {
+                                    System.out.printf("По имени %s номер телефона : %s\n",
+                                            dataBase[indexRow][0], dataBase[indexRow][1]);
+                                    System.out.print("Press enter>>>");
+                                    service = stdin.nextLine();
+                                } else {
+                                    dataBase = addRegister(fullName, numPhone, dataBase);
+                                    sortingOfRegisters(dataBase);
+                                }
                             } else {
                                 System.out.println("Введены некорректные ФИО");
+                                System.out.print("Press enter>>>");
+                                service = stdin.nextLine();
                             }
                         }
                     }
                     else {
                         System.out.println("Введены некорректные данные");
+                        System.out.print("Press enter>>>");
+                        service = stdin.nextLine();
                     }
-                    System.out.print("Press enter>>>");
-                    service = stdin.nextLine();
                     break;
                 case'2':
                     System.out.print("Введите ФИО или номер телефона>>>");
@@ -90,6 +111,8 @@ public class PhoneBook {
                             dataBase = delRegister(dataBase, indexRow);
                         } else {
                             System.out.println("Такой записи, в телефонной книге, нет");
+                            System.out.print("Press enter>>>");
+                            service = stdin.nextLine();
                         }
                     } else if (checkPhoneNumber(numPhone)) {
                         numPhone = formatPhoneNumber(numPhone);
@@ -98,13 +121,15 @@ public class PhoneBook {
                             dataBase = delRegister(dataBase, indexRow);
                         } else {
                             System.out.println("Такой записи, в телефонной книге, нет");
+                            System.out.print("Press enter>>>");
+                            service = stdin.nextLine();
                         }
                     }
                     else {
                         System.out.println("Введены некорректные данные");
+                        System.out.print("Press enter>>>");
+                        service = stdin.nextLine();
                     }
-                    System.out.print("Press enter>>>");
-                    service = stdin.nextLine();
                     break;
                 case'3':
                     printPhoneBook(dataBase);
@@ -115,7 +140,7 @@ public class PhoneBook {
                     isExit = false;
                     break;
                 default:
-                    System.out.println("Выбор вне диапазона меню");
+                    System.out.println("\nВыбор вне диапазона меню");
             }
         }
     }
@@ -258,11 +283,34 @@ public class PhoneBook {
         }
     }
 
+    public static void sortingOfRegisters(String[][] array) {
+        int end = 0;
+        String temp = "";
+
+        for (int i = (array.length - 1); array[i][0].length() == 0; i--) {
+            end++;
+        }
+        end = array.length - end;
+        while (!temp.equals("1")) {
+            temp = "1";
+            for (int i = 0; i < end - 1; i++) {
+                if (array[i][0].compareToIgnoreCase(array[i + 1][0]) > 0) {
+                    for (int j = 0; j < 2; j++) {
+                        temp = array[i][j];
+                        array[i][j] = array[i + 1][j];
+                        array[i + 1][j] = temp;
+                    }
+                }
+            }
+            end--;
+        }
+    }
+
     public static void printPhoneBook(String[][] book) {
-        System.out.printf("\t%22s\t%28s\n", "*--=Имя=--*", "*--=Телефон=--*");
+        System.out.printf("\t%30s\t%36s\n", "*--=Имя=--*", "*--=Телефон=--*");
         for (int i = 0; i < book.length; i++) {
             if (book[i][0].length() > 0) {
-                System.out.printf("%d. \t%-35s\t%-20s\n", i + 1, book[i][0], book[i][1]);
+                System.out.printf("%d. \t%-50s\t%-20s\n", i + 1, book[i][0], book[i][1]);
             }
         }
     }
