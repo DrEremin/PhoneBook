@@ -329,10 +329,10 @@ public class PhoneBook {
     }
 
     public static void printPhoneBook(String[][] book) {
-        System.out.printf("\t%30s\t%36s\n", "*--=Имя=--*", "*--=Телефон=--*");
+        System.out.printf("%32s%37s\n", "*--=Имя=--*", "*--=Телефон=--*");
         for (int i = 0; i < book.length; i++) {
             if (book[i][0].length() > 0) {
-                System.out.printf("%d. \t%-50s\t%-20s\n", i + 1, book[i][0], book[i][1]);
+                System.out.printf("%d. %-50s%-20s\n", i + 1, book[i][0], book[i][1]);
             }
         }
     }

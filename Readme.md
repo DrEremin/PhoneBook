@@ -1,5 +1,5 @@
-# Phone Book
-**Phone Book** is console application with simple database. It lets to keep full-<br/>
+# PhoneBook
+**Phonebook** is console application with simple database. It lets to keep full-<br/>
 names of people and their phone numbers. Its apllication also lets to show<br/> 
 database or separate entries on display and to input data in database.
 ## Features of use
